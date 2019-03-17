@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MakeFive</string>
+    <string name="base_url">http://10.82.137.209:8080</string>
+</resources>

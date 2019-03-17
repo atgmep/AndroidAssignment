@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TitleActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Connect Five - 2278"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnPlaySolo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="clickToPlaySolo"
+        android:text="Play vs Bot" />
+
+    <Button
+        android:id="@+id/btnPlayOnline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="clickToPlayOnline"
+        android:text="Play vs Human" />
+
+    <Button
+        android:id="@+id/btnShowRank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="clickToShowRank"
+        android:text="Show Leader Board" />
+
+    <Button
+        android:id="@+id/btnDonate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="clickToDonate"
+        android:text="Donate us" />
+
+</LinearLayout>
