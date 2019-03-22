@@ -21,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 public class BoardActivity extends AppCompatActivity {
 
@@ -40,6 +41,10 @@ public class BoardActivity extends AppCompatActivity {
     private String playerNo;
     private int colResp = -1;
     private int rowResp = -1;
+
+    private String oppPointStr;
+    private boolean isStartMatchTimerOn;
+
 
     String startMatchRespStr;
     Response startMatchResp;
@@ -69,6 +74,7 @@ public class BoardActivity extends AppCompatActivity {
 //                    }
 //                });
 
+
                 final int col = j;
                 final int row = i;
                 final ImageView imageView = new ImageView(this);
@@ -88,6 +94,46 @@ public class BoardActivity extends AppCompatActivity {
 
         startMatchTask = new StartMatchTask();
         startMatchTask.execute();
+
+        isStartMatchTimerOn = true;
+//        AsyncTask<String, Integer, String> startMatchTimer = new StartMatchTimer();
+
+//        startMatchTimer.execute();
+
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+//                System.out.println("t 0");
+                final long time0 = new Date().getTime();
+//                System.out.println(time0);
+                while (isStartMatchTimerOn) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            int dTime = (int) ((new Date().getTime() - time0) / 1000);
+                            int min = dTime / 60;
+                            int sec = dTime % 60;
+                            String timeStr = String.format("%02d:%02d", min, sec);
+                            txtOppPoint.setText(timeStr);
+                        }
+                    });
+                    try {
+                        Thread.sleep(250);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        txtOppPoint.setText(oppPointStr);
+                    }
+                });
+            }
+        });
+        t.start();
 //        startMatch();
     }
 
@@ -112,12 +158,12 @@ public class BoardActivity extends AppCompatActivity {
                 urlConnection.setDoOutput(true);
 
                 urlConnection.connect();
+
                 int responseCode = urlConnection.getResponseCode();
+
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     String respStr = RequestTask.readStream(urlConnection.getInputStream());
                     startMatchResp = gson.fromJson(respStr, Response.class);
-
-
 
 
                     if (startMatchResp.getStatusCode() != Response.STATUS_SUCCESS) {
@@ -125,7 +171,7 @@ public class BoardActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 txtOppName.setText("Fail to Start");
-                                txtOppPoint.setText("00:00");
+                                setOppPoint("Time out");
                             }
                         });
 
@@ -139,7 +185,7 @@ public class BoardActivity extends AppCompatActivity {
                                 String s = "2".equals(playerNo) ? "You are player 2" : "Your turn";
                                 txtMsg.setText(s);
                                 txtOppName.setText(startMatchResp.getData().get(1));
-                                txtOppPoint.setText(startMatchResp.getData().get(2));
+                                setOppPoint(startMatchResp.getData().get(2));
                             }
                         });
 
@@ -256,6 +302,53 @@ public class BoardActivity extends AppCompatActivity {
         }
     }
 
+    private void setOppPoint(String str) {
+        oppPointStr = str;
+        System.out.println("stop");
+        isStartMatchTimerOn = false;
+    }
+
+//    private class StartMatchTimer extends AsyncTask<String, Integer, String> {
+//        @Override
+//        protected String doInBackground(String... strings) {
+//            System.out.println("t 0");
+//            final long time0 = new Date().getTime();
+//            System.out.println(time0);
+//            while (isStartMatchTimerOn) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        int dTime = (int) ((new Date().getTime() - time0) / 1000);
+//                        int min = dTime / 60;
+//                        int sec = dTime % 60;
+//                        String timeStr = String.format("%02d:%02d", min, sec);
+//                        txtOppPoint.setText(timeStr);
+//                    }
+//                });
+//                try {
+//                    Thread.sleep(250);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            txtOppPoint.setText(oppPointStr);
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Integer... progress) {
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//        }
+//    }
+
+
+//    @Override
+//    public void run() {
+//
+//    }
 
 //    public void startMatch() {
 //        lockBoard = true;
@@ -360,20 +453,12 @@ public class BoardActivity extends AppCompatActivity {
 //    }
 
     private void handlingMove(String responseStr) {
-        moveRespStr = responseStr;
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd/MM/yyyy HH:mm").create();
-        Response response = gson.fromJson(responseStr, Response.class);
+        final Response response = gson.fromJson(responseStr, Response.class);
 
         if (response.getStatusCode() != Response.STATUS_SUCCESS) {
             return;
         }
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                txtMsg.setText(moveRespStr);
-            }
-        });
         String messageStr = response.getMessage();
         String[] coordinate;
 
@@ -388,12 +473,18 @@ public class BoardActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         imageViews[colResp][rowResp].setBackgroundResource(R.drawable.cell_x);
+                        txtMsg.setText("Your turn");
                     }
                 });
                 lockBoard = false;
                 return;
             case Fix.OPP_LOS:
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        txtMsg.setText("You win");
+                    }
+                });
                 return;
             case Fix.OPP_WIN:
                 coordinate = response.getData().get(0).split("x");
@@ -404,12 +495,25 @@ public class BoardActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         imageViews[colResp][rowResp].setBackgroundResource(R.drawable.cell_x);
+                        txtMsg.setText("Opponent win");
                     }
                 });
                 return;
             case Fix.OPP_AFK:
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        txtMsg.setText("You win");
+                    }
+                });
                 return;
             case Fix.YOU_WIN:
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        txtMsg.setText("You win");
+                    }
+                });
                 return;
         }
 

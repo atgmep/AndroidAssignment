@@ -46,7 +46,7 @@ public class GameDataService {
         GameData newMatch = appData.newMatch(tblAccount);
         String matchId = newMatch.getId();
         System.out.println(tblAccount.getUsername() + " create match " + matchId);
-        long waitTime = methods.getTimeNow() + 3 * 60 * 1000;
+        long waitTime = methods.getTimeNow() + 1 * 60 * 1000;
         while (methods.getTimeNow() < waitTime) {
             try {
                 Thread.sleep(1000);
