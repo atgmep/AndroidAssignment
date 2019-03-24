@@ -1,8 +1,12 @@
 package day12.mobilestudy.make5;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +39,16 @@ public class Response {
     public Response(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
+    }
+
+    public static Response build(HttpURLConnection urlConnection) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd/MM/yyyy HH:mm").create();
+        try {
+            return gson.fromJson(RequestTask.readStream(urlConnection.getInputStream()), Response.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void setResponse(int statusCode, String message) {

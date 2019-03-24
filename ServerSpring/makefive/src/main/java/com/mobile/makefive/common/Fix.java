@@ -38,4 +38,7 @@ public interface Fix {
     Stat[] ACC_STAT_LIST = {ACC_NEW, ACC_BAN};
 
 
+    int WAIT_SHORT = 100;
+    int WAIT_LONG = 3 * 60 * 1000;
+
 }

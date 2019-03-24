@@ -16,6 +16,13 @@ public class GameData {
     private int[][] board;
     private boolean isPlayer1Win;
     private boolean isOver;
+    private boolean isPlayer1Confirm;
+    private boolean isPlayer2Confirm;
+
+
+    public GameData() {
+        this.id = null;
+    }
 
     public GameData(TblAccount player1) {
         this.id = UUID.randomUUID().toString();
@@ -32,6 +39,8 @@ public class GameData {
         }
         this.isPlayer1Win = true;
         this.isOver = false;
+        this.isPlayer1Confirm = false;
+        this.isPlayer2Confirm = false;
     }
 
     public int getPiece() {
@@ -98,6 +107,13 @@ public class GameData {
         return false;
     }
 
+    public void confirmResult(boolean isPlayer1) {
+        if (isPlayer1) {
+            isPlayer1Confirm = true;
+        } else {
+            isPlayer2Confirm = true;
+        }
+    }
 
     public String getId() {
         return id;
@@ -171,10 +187,24 @@ public class GameData {
         isOver = over;
     }
 
+    public boolean isPlayer1Confirm() {
+        return isPlayer1Confirm;
+    }
+
+    public void setPlayer1Confirm(boolean player1Confirm) {
+        isPlayer1Confirm = player1Confirm;
+    }
+
+    public boolean isPlayer2Confirm() {
+        return isPlayer2Confirm;
+    }
+
+    public void setPlayer2Confirm(boolean player2Confirm) {
+        isPlayer2Confirm = player2Confirm;
+    }
+
     @Override
     public String toString() {
-        return "GameData{" +
-                "id='" + id + '\'' +
-                '}';
+        return "{" + id + '}';
     }
 }

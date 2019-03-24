@@ -4,6 +4,7 @@ import com.mobile.makefive.common.Fix;
 import com.mobile.makefive.common.Methods;
 import com.mobile.makefive.entity.TblAccount;
 import com.mobile.makefive.model.AppData;
+import com.mobile.makefive.model.CurrentGame;
 import com.mobile.makefive.model.GameData;
 import com.mobile.makefive.model.Response;
 import com.mobile.makefive.repository.AccountRepository;
@@ -18,6 +19,9 @@ public class GameDataService {
 
     @Autowired
     private AppData appData;
+
+    @Autowired
+    private CurrentGame currentGame;
 
     private AccountRepository accountRepository;
 
@@ -36,6 +40,11 @@ public class GameDataService {
 
         for (GameData match : matches) {
             if (match.getPlayer2() == null) {
+                if (match.getPlayer1().equals(tblAccount)) {
+                    response.setResponse(Response.STATUS_FAIL, "Already on queue");
+                    return response;
+                }
+                currentGame.gameData = match;
                 match.setPlayer2(tblAccount);
                 match.setMoveCount(1);
                 System.out.println(tblAccount.getUsername() + " join match " + match.getId());
@@ -44,21 +53,30 @@ public class GameDataService {
             }
         }
         GameData newMatch = appData.newMatch(tblAccount);
+        currentGame.gameData = newMatch;
+        currentGame.isCancelQueue = false;
         String matchId = newMatch.getId();
         System.out.println(tblAccount.getUsername() + " create match " + matchId);
-        long waitTime = methods.getTimeNow() + 1 * 60 * 1000;
+        long waitTime = methods.getTimeNow() + Fix.WAIT_LONG;
         while (methods.getTimeNow() < waitTime) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(Fix.WAIT_SHORT);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+            if (currentGame.isCancelQueue) {
+                response.setResponse(Response.STATUS_FAIL, "Quit queue");
+                return response;
             }
             if (newMatch.getPlayer2() != null) {
                 response.setResponse(Response.STATUS_SUCCESS, "1", matchId, newMatch.getPlayer2().getUsername(), newMatch.getPlayer2().getPoint() + "");
                 return response;
             }
+
+
         }
         appData.removeMatch(matchId);
+        System.out.println("out queue");
         response.setResponse(Response.STATUS_FAIL, Response.MESSAGE_FAIL);
         return response;
     }
@@ -89,10 +107,14 @@ public class GameDataService {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(3 * 60 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                Methods methods = new Methods();
+                long maxWait = methods.getTimeNow() + 30 * 1000;
+                while ((!match.isPlayer1Confirm() || !match.isPlayer2Confirm()) && methods.getTimeNow() < maxWait) {
+                    try {
+                        Thread.sleep(Fix.WAIT_SHORT);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 appData.getMatches().remove(match);
             }
@@ -100,12 +122,23 @@ public class GameDataService {
         t.start();
     }
 
-    public Response quitMatch(String id) {
+
+    public Response quitMatch() {
         Methods methods = new Methods();
         TblAccount currentUser = methods.getUser();
-        GameData gameData = appData.getMatch(id);
+
         Response response = new Response(Response.STATUS_FAIL, Response.MESSAGE_FAIL);
 
+        GameData gameData = currentGame.gameData;
+
+        if (gameData == null) {
+            response.setResponse(Response.STATUS_FAIL, "Match null");
+            return response;
+        }
+        if (gameData.isOver()) {
+            response.setResponse(Response.STATUS_FAIL, "Game end");
+            return response;
+        }
         boolean isPlayer1;
         if (gameData.isPlayer1(currentUser)) {
             isPlayer1 = true;
@@ -115,15 +148,16 @@ public class GameDataService {
             response.setResponse(Response.STATUS_FAIL, "Illegal access");
             return response;
         }
-
         if (gameData.getMoveCount() == 0 && isPlayer1) {
-            appData.removeMatch(id);
+            System.out.println("stop queue");
+            appData.removeMatch(gameData.getId());
             response.setResponse(Response.STATUS_SUCCESS, Response.MESSAGE_SUCCESS);
             return response;
         }
-
+        System.out.println("forfeit");
         gameData.setPlayer1Win(!isPlayer1);
         gameData.setOver(true);
+        gameData.confirmResult(isPlayer1);
         // LOST - You quit
         response.setResponse(Response.STATUS_SUCCESS, Fix.YOU_LOS);
         return response;
@@ -169,7 +203,7 @@ public class GameDataService {
 
         while (true) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(Fix.WAIT_SHORT);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -184,10 +218,12 @@ public class GameDataService {
                 if (isPlayer1 == gameData.isPlayer1Win()) {
                     // WIN - Opponent quitMatch
                     clearMatch(gameData);
+                    gameData.confirmResult(isPlayer1);
                     response.setResponse(Response.STATUS_SUCCESS, Fix.OPP_LOS);
                     return response;
                 } else {
                     // LOST - Opponent win
+                    gameData.confirmResult(isPlayer1);
                     response.setResponse(Response.STATUS_SUCCESS, Fix.OPP_WIN, gameData.getCol() + "x" + gameData.getRow());
                     return response;
                 }
@@ -199,6 +235,7 @@ public class GameDataService {
                 System.out.println(currentUser.getUsername() + " wait Win");
                 // WIN - Opponent afk
                 clearMatch(gameData);
+                gameData.confirmResult(isPlayer1);
                 response.setResponse(Response.STATUS_SUCCESS, Fix.OPP_AFK);
                 return response;
             }
@@ -221,7 +258,7 @@ public class GameDataService {
         int nextMoveCount = gameData.getMoveCount() + 1;
         while (true) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(Fix.WAIT_SHORT);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -236,6 +273,7 @@ public class GameDataService {
                 if (!gameData.isPlayer1Win()) {
                     // WIN - Opponent quitMatch
                     clearMatch(gameData);
+                    gameData.confirmResult(false);
                     response.setResponse(Response.STATUS_SUCCESS, Fix.OPP_LOS);
                     return response;
                 }
@@ -246,6 +284,7 @@ public class GameDataService {
                 System.out.println(currentUser.getUsername() + " wait Win");
                 // WIN - Opponent afk
                 clearMatch(gameData);
+                gameData.confirmResult(false);
                 response.setResponse(Response.STATUS_SUCCESS, Fix.OPP_AFK);
                 return response;
             }

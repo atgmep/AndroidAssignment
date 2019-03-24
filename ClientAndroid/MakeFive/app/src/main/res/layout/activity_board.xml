@@ -66,6 +66,11 @@
         </TableRow>
     </TableLayout>
 
-
+    <Button
+        android:id="@+id/btnQuitMatch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="clickToQuit"
+        android:text="Quit Match" />
 
 </LinearLayout>

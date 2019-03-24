@@ -1,5 +1,6 @@
 package day12.mobilestudy.make5;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,15 +42,12 @@ public class BoardActivity extends AppCompatActivity {
     private String playerNo;
     private int colResp = -1;
     private int rowResp = -1;
-
     private String oppPointStr;
     private boolean isStartMatchTimerOn;
+    private Response startMatchResp;
+    private boolean hasQuit = false;
 
 
-    String startMatchRespStr;
-    Response startMatchResp;
-
-    String moveRespStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +133,52 @@ public class BoardActivity extends AppCompatActivity {
         });
         t.start();
 //        startMatch();
+    }
+
+    @Override
+    protected void onDestroy() {
+        quitMatch();
+        super.onDestroy();
+    }
+
+    private void quitMatch() {
+        if(!hasQuit){
+            String[] paramName = {};
+            String[] paramValue = {};
+            Thread t = new Thread(new ApiCallerThread(Fix.URL + "/api/match/quit", "POST", paramName, paramValue, 100) {
+                @Override
+                public void functionFail(Response response) {
+                    System.out.println(response);
+                }
+
+                @Override
+                public void functionError(Response response) {
+                    System.out.println(response);
+                }
+
+                @Override
+                public void functionSuccess(final Response response) {
+//                + response.getData().get(0)
+                    System.out.println(response);
+                    System.out.println("quit ");
+                }
+
+                @Override
+                public void functionNotOk(int responseCode, HttpURLConnection urlConnection) {
+                    System.out.println(responseCode);
+                }
+            });
+            hasQuit = true;
+            t.start();
+        }
+    }
+
+
+    public void clickToQuit(View view) {
+//        quitMatch();
+        Intent intent = this.getIntent();
+        this.setResult(RESULT_OK, intent);
+        finish();
     }
 
 
@@ -515,6 +559,7 @@ public class BoardActivity extends AppCompatActivity {
                     }
                 });
                 return;
+            default:
         }
 
     }

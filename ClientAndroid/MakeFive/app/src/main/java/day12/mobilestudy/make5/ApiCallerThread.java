@@ -1,7 +1,6 @@
 package day12.mobilestudy.make5;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,7 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public abstract class ApiCaller extends AsyncTask<String, Integer, String> {
+public abstract class ApiCallerThread implements Runnable {
 
     private String urlStr;
     private String methodStr;
@@ -23,7 +22,7 @@ public abstract class ApiCaller extends AsyncTask<String, Integer, String> {
     private String[] paramValue;
     private int timeout;
 
-    public ApiCaller(String urlStr, String methodStr, String[] paramName, String[] paramValue, int timeout) {
+    public ApiCallerThread(String urlStr, String methodStr, String[] paramName, String[] paramValue, int timeout) {
         super();
         this.urlStr = urlStr;
         this.methodStr = methodStr;
@@ -32,8 +31,8 @@ public abstract class ApiCaller extends AsyncTask<String, Integer, String> {
         this.timeout = timeout;
     }
 
-    protected String doInBackground(String... args) {
-
+    @Override
+    public void run() {
         URL url;
         HttpURLConnection urlConnection;
         try {
@@ -80,8 +79,8 @@ public abstract class ApiCaller extends AsyncTask<String, Integer, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
+
 
     public abstract void functionFail(Response response);
 

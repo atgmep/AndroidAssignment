@@ -1,6 +1,7 @@
 package com.mobile.makefive.config;
 
 import com.mobile.makefive.model.AppData;
+import com.mobile.makefive.model.GameData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;

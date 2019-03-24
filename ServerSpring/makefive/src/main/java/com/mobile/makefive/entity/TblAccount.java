@@ -137,6 +137,6 @@ public class TblAccount implements UserDetails {
 
     @Override
     public String toString() {
-        return "TblAccount{ " + username + " }";
+        return "{" + username + "}";
     }
 }

@@ -58,10 +58,11 @@ public class GameDataController extends AbstractController {
     }
 
     @PostMapping(Fix.MAP_API +  "/match/quit")
-    public String quitMatch(String id) {
+    public String quitMatch() {
+        System.out.println("q1");
         Response response = new Response(Response.STATUS_FAIL, Response.MESSAGE_FAIL);
         try {
-            response = matchService.quitMatch(id);
+            response = matchService.quitMatch();
         } catch (Exception e) {
             e.printStackTrace();
             response.setResponse(Response.STATUS_SERVER_ERROR, Response.MESSAGE_SERVER_ERROR);
