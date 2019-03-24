@@ -1,6 +1,10 @@
 package com.mobile.makefive.service;
 
+import com.mobile.makefive.common.Fix;
+import com.mobile.makefive.common.Methods;
+import com.mobile.makefive.common.Validator;
 import com.mobile.makefive.entity.TblAccount;
+import com.mobile.makefive.model.Response;
 import com.mobile.makefive.repository.AccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +26,7 @@ public class LoginService implements UserDetailsService {
     public TblAccount findByUserName(String username) {
         Optional<TblAccount> optional = accountRepository.findByUsername(username);
         if (!optional.isPresent()) {
-            throw new UsernameNotFoundException("User not found");
+            return null;
         }
         return optional.get();
     }
@@ -35,4 +39,5 @@ public class LoginService implements UserDetailsService {
         }
         return optional.get();
     }
+
 }

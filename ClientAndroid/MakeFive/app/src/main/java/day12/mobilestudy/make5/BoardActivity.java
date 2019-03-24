@@ -246,7 +246,7 @@ public class BoardActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    txtMsg.setText("wait for player");
+                    txtMsg.setText("Opponent turn");
                 }
             });
             URL url;
@@ -482,7 +482,7 @@ public class BoardActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        txtMsg.setText("You win");
+                        txtMsg.setText("Opponent quit");
                     }
                 });
                 return;
@@ -503,7 +503,7 @@ public class BoardActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        txtMsg.setText("You win");
+                        txtMsg.setText("Opponent quit");
                     }
                 });
                 return;

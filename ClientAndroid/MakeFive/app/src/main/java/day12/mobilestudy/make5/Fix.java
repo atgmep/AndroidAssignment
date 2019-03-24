@@ -9,7 +9,8 @@ public interface Fix {
     // http://10.82.137.209:8080
    // 192.168.100.51
     // 10.82.137.209
-    String URL = "http://10.82.137.209:8080";
+    String URL = "http://192.168.0.101:8080";
+    int TIME_OUT = 30;
 
     /* API mapping */
     String MAP_ANY = "/any";
@@ -32,6 +33,5 @@ public interface Fix {
 
 
     String PAYPAL_CLIENT_ID = "Ae-WAkmVpZzdf5yYCDsw712GLWeT1RMqWTwirxkRRFnEEvMWKKxvpcn6WW7k2tv6Ck7RmRDEPLLUdJ0F";
-    String PAYPAL_CLIENT_SECRET = "EAbfxREiU06k1rVeIbql1kC0zNc0_-3Yw6JY0hpMCMjT3VLd4PQj_eJuvop4xINX6OJProI3f6F3B2Nn";
-    String PAYPAL_MODE = "sandbox";
+    String PAYPAL_CURRENCY = "USD";
 }

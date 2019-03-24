@@ -53,18 +53,7 @@ public final class Methods {
     }
 
 
-    public boolean nullOrSpace(String str) {
-        if (str == null) {
-            return true;
-        }
-        if (str.isEmpty()) {
-            return true;
-        }
-        if (str.trim().isEmpty()) {
-            return true;
-        }
-        return false;
-    }
+   
 
 
     public String handleImage(MultipartFile image) {

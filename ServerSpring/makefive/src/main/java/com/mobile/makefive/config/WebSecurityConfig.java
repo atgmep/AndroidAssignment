@@ -4,6 +4,8 @@ package com.mobile.makefive.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mobile.makefive.common.Fix;
+import com.mobile.makefive.common.Methods;
+import com.mobile.makefive.entity.TblAccount;
 import com.mobile.makefive.model.Response;
 import com.mobile.makefive.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +101,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/access_denied")
                 .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/sign_out", "GET"))
                 .permitAll()
                 .logoutSuccessUrl("/logout_success")
                 .and()
@@ -111,10 +112,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new AuthenticationSuccessHandler() {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                List<? extends GrantedAuthority> authorities = (List<? extends GrantedAuthority>) authentication.getAuthorities();
-                String role = authorities.get(0).getAuthority();
+                Methods methods = new Methods();
+                TblAccount user = methods.getUser();
                 Response responseObj = new Response(Response.STATUS_FAIL, Response.MESSAGE_FAIL);
-                responseObj.setResponse(Response.STATUS_SUCCESS, Response.MESSAGE_SUCCESS, role);
+                responseObj.setResponse(Response.STATUS_SUCCESS, user.getRole(), user.getPoint() + "");
                 Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd/MM/yyyy HH:mm").create();
                 response.getWriter().append(gson.toJson(responseObj));
             }
@@ -125,8 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new AuthenticationFailureHandler() {
             @Override
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-                Response responseObj = new Response(Response.STATUS_FAIL, Response.MESSAGE_FAIL);
-                responseObj.setResponse(Response.STATUS_FAIL, Response.MESSAGE_FAIL, "Error");
+                Response responseObj = new Response(Response.STATUS_FAIL, "Error");
                 Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd/MM/yyyy HH:mm").create();
                 response.getWriter().append(gson.toJson(responseObj));
             }

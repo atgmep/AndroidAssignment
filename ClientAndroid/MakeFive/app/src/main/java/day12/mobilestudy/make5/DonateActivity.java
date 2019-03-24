@@ -45,7 +45,7 @@ public class DonateActivity extends AppCompatActivity {
 
     private void processPayment() {
         amount = edtAmount.getText().toString();
-        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(amount), "USD", "Donate to MakeFive", PayPalPayment.PAYMENT_INTENT_SALE);
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(amount), Fix.PAYPAL_CURRENCY, "Donate to MakeFive", PayPalPayment.PAYMENT_INTENT_SALE);
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
         intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);

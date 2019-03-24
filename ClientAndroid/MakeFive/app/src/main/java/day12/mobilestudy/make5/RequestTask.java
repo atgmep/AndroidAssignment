@@ -1,7 +1,6 @@
 package day12.mobilestudy.make5;
 
 import android.net.Uri;
-import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,20 +9,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 
 public class RequestTask {
 
     public static final String COOKIES_HEADER = "Set-Cookie";
     public static java.net.CookieManager msCookieManager = new java.net.CookieManager();
 
-    public Thread sendHttp(String api, final String method, final String[] paramName, final String[] paramValue, final int respPos) {
+    public Thread sendHttp(String api, final String method, final String[] paramName, final String[] paramValue, final int respPos, final int timeout) {
         final String apiF = api;
         Thread t = new Thread(new Runnable() {
             @Override
@@ -36,6 +32,9 @@ public class RequestTask {
                     urlConnection.setRequestMethod(method);
                     urlConnection.setDoInput(true);
                     urlConnection.setDoOutput(true);
+                    if (timeout > 0) {
+                        urlConnection.setConnectTimeout(timeout);
+                    }
                     if (paramName.length > 0) {
                         Uri.Builder builder = new Uri.Builder();
                         for (int i = 0; i < paramName.length; i++) {

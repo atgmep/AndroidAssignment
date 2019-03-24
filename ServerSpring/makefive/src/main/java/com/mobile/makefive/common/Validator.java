@@ -15,14 +15,17 @@ public class Validator {
     }
 
     public String checkUsername(String input) {
+        if (input == null) {
+            return null;
+        }
         String s = input.replace(" ", "").toLowerCase();
         try {
             if (!s.matches("^.*[a-z].*$")) {
-                System.out.println("1");
+//                System.out.println("1");
                 return null;
             }
-            if (!s.matches("^[a-z0-9]{3,20}$")) {
-                System.out.println("2");
+            if (!s.matches("^[a-z0-9]{2,20}$")) {
+//                System.out.println("2");
                 return null;
             }
             return s;
@@ -65,6 +68,19 @@ public class Validator {
             return "";
         }
         return input;
+    }
+
+    public boolean isNullOrSpace(String str) {
+        if (str == null) {
+            return true;
+        }
+        if (str.isEmpty()) {
+            return true;
+        }
+        if (str.trim().isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
 }

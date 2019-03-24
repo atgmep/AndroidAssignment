@@ -17,7 +17,7 @@
             android:id="@+id/edtAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter amount" />
+            android:hint="Enter amount in USD" />
 
         <Button
             android:id="@+id/btnPay"

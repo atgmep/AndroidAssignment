@@ -1,5 +1,7 @@
 package com.mobile.makefive.common;
 
+import com.mobile.makefive.model.Stat;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -30,7 +32,10 @@ public interface Fix {
     String OPP_AFK = "Opponent afk";
 
 
-
+    /* Account Status */
+    Stat ACC_NEW = new Stat(1, "new");
+    Stat ACC_BAN = new Stat(3, "banned");
+    Stat[] ACC_STAT_LIST = {ACC_NEW, ACC_BAN};
 
 
 }

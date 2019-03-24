@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".RegisterActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -38,12 +37,17 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"/>
 
-    <Button
-        android:id="@+id/btnLogin"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="clickToLogin"
-        android:text="Login" />
+        android:text="Confirm Password"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edtConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/btnRegister"
@@ -51,4 +55,5 @@
         android:layout_height="wrap_content"
         android:onClick="clickToRegister"
         android:text="Register" />
+
 </LinearLayout>
