@@ -1,0 +1,101 @@
+package day12.mobilestudy.make5;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.net.HttpURLConnection;
+
+public class LeadActivity extends AppCompatActivity {
+
+    private TableLayout tblLead;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lead);
+        tblLead = findViewById(R.id.tblLead);
+        getLeaderBoard();
+    }
+
+
+    private void getLeaderBoard() {
+        String[] paramName = {};
+        String[] paramValue = {};
+        Thread t = new Thread(new ApiCallerThread(Fix.URL + "/api/lead", "POST", paramName, paramValue, 100) {
+            @Override
+            public void functionFail(Response response) {
+                System.out.println(response);
+            }
+
+            @Override
+            public void functionError(Response response) {
+                System.out.println(response);
+            }
+
+            @Override
+            public void functionSuccess(final Response response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd/MM/yyyy HH:mm").create();
+                        for (int i = 0; i < response.getData().size(); i++) {
+                            TableRow.LayoutParams paramsRow = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+                            TableRow.LayoutParams paramsRank = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.2f);
+                            TableRow.LayoutParams paramsUser = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.5f);
+                            TableRow.LayoutParams paramsPoint = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.3f);
+
+                            TableRow tableRow = new TableRow(LeadActivity.this);
+                            tableRow.setLayoutParams(paramsRow);
+                            MdlAccount account = gson.fromJson(response.getData().get(i), MdlAccount.class);
+
+                            TextView txtRank = new TextView(LeadActivity.this);
+                            txtRank.setLayoutParams(paramsRank);
+                            txtRank.setGravity(Gravity.CENTER);
+                            String rank;
+//                            if (i == 0) {
+//                                rank = "\uD83E\uDD47";
+//                            } else if (i == 1) {
+//                                rank = "\uD83E\uDD48";
+//                            } else if (i == 2) {
+//                                rank = "\uD83E\uDD49";
+//                            } else {
+                                rank = (i + 1) + "";
+//                            }
+                            txtRank.setText(rank);
+
+                            TextView txtUser = new TextView(LeadActivity.this);
+                            txtUser.setLayoutParams(paramsUser);
+                            txtUser.setGravity(Gravity.CENTER);
+                            txtUser.setText(account.getUsername());
+
+                            TextView txtPoint = new TextView(LeadActivity.this);
+                            txtPoint.setLayoutParams(paramsPoint);
+                            txtPoint.setGravity(Gravity.CENTER);
+                            txtPoint.setText(account.getPoint() + "");
+                            
+                            tableRow.addView(txtRank);
+                            tableRow.addView(txtUser);
+                            tableRow.addView(txtPoint);
+                            tblLead.addView(tableRow);
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void functionNotOk(int responseCode, HttpURLConnection urlConnection) {
+                System.out.println(responseCode);
+            }
+        });
+        t.start();
+    }
+
+}

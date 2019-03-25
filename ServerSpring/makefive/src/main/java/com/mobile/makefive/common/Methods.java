@@ -9,13 +9,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public final class Methods {
 
@@ -53,9 +54,6 @@ public final class Methods {
     }
 
 
-   
-
-
     public String handleImage(MultipartFile image) {
         if (image != null) {
             String fileName = image.getOriginalFilename();
@@ -91,5 +89,20 @@ public final class Methods {
         return null;
     }
 
-
+    void deleteDirectoryStream(Path path) throws IOException {
+        Files.walk(path)
+                .sorted(Comparator.reverseOrder())
+                .map(new Function<Path, File>() {
+                    @Override
+                    public File apply(Path path1) {
+                        return path1.toFile();
+                    }
+                })
+                .forEach(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) {
+                        file.delete();
+                    }
+                });
+    }
 }

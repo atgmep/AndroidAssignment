@@ -1,5 +1,6 @@
 package com.mobile.makefive.entity;
 
+import com.google.gson.annotations.Expose;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +21,14 @@ public class TblAccount implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
+    @Expose
     @Column(name = "username", length = 45)
     private String username;
     @Column(name = "password", length = 100)
     private String password;
     @Column(name = "role", length = 250)
     private String role;
+    @Expose
     @Column(name = "point")
     private Long point;
     @Column(name = "win")

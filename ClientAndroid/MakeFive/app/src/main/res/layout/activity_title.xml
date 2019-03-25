@@ -42,12 +42,12 @@
     </TableLayout>
 
 
-    <Button
-        android:id="@+id/btnPlaySolo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="clickToPlaySolo"
-        android:text="Play vs Bot" />
+    <!--<Button-->
+        <!--android:id="@+id/btnPlaySolo"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:onClick="clickToPlaySolo"-->
+        <!--android:text="Play vs Bot" />-->
 
     <Button
         android:id="@+id/btnPlayOnline"

@@ -13,7 +13,8 @@ import java.net.HttpURLConnection;
 
 public class TitleActivity extends AppCompatActivity {
 
-    public static final int PLAY_ON_REQ_CODE = 1113;
+    public static final int PLAY_ON_REQ_CODE = 1313;
+    public static final int LEAD_REQ_CODE = 1115;
     public static final int DONATE_REQ = 7896;
     public static String username;
     public static String point;
@@ -107,6 +108,8 @@ public class TitleActivity extends AppCompatActivity {
     }
 
     public void clickToShowRank(View view) {
+        Intent intent = new Intent(TitleActivity.this, LeadActivity.class);
+        startActivityForResult(intent, LEAD_REQ_CODE);
     }
 
     public void clickToDonate(View view) {
