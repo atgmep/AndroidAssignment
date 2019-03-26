@@ -9,7 +9,7 @@ public interface Fix {
     // http://10.82.137.209:8080
    // 192.168.100.51
     // 10.82.137.209
-    String URL = "http://192.168.100.79:8080";
+    String URL = "http://192.168.100.99:8080";
     int TIME_OUT = 30;
 
     /* API mapping */

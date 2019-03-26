@@ -11,5 +11,5 @@ public interface AccountRepository extends JpaRepository<TblAccount, Integer> {
 
     Optional<TblAccount> findByUsername(String username);
 
-    List<TblAccount> findTop5ByOrderByPointDesc();
+    List<TblAccount> findTop10ByOrderByPointDesc();
 }

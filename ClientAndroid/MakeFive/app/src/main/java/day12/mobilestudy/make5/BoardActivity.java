@@ -346,6 +346,9 @@ public class BoardActivity extends AppCompatActivity {
         }
     }
 
+
+
+
     private void setOppPoint(String str) {
         oppPointStr = str;
         System.out.println("stop");

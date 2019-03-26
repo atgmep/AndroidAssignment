@@ -82,32 +82,32 @@ public class GameDataService {
     }
 
     public void clearMatch(GameData match) {
-        TblAccount player1 = match.getPlayer1();
-        TblAccount player2 = match.getPlayer2();
-        Long p1point = player1.getPoint();
-        Long p2point = player2.getPoint();
-        if (match.isPlayer1Win()) {
-            long pointEarn = Math.max(10l, ((p2point - p1point) / 8) + 50);
-            player1.setPoint(p1point + pointEarn);
-            player1.setWin(player1.getWin() + 1);
-            player2.setPoint(p2point - pointEarn);
-            player2.setLose(player2.getLose() + 1);
-            System.out.println("End " + pointEarn + " " + player1 + " + " + player2 + " -");
-        } else {
-            long pointEarn = Math.max(10l, ((p1point - p2point) / 8) + 50);
-            player1.setPoint(p1point - pointEarn);
-            player1.setLose(player1.getLose() + 1);
-            player2.setPoint(p2point + pointEarn);
-            player2.setWin(player2.getWin() + 1);
-            System.out.println("End " + pointEarn + " " + player1 + " - " + player2 + " +");
-        }
-        accountRepository.save(player1);
-        accountRepository.save(player2);
-
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 Methods methods = new Methods();
+                TblAccount player1 = match.getPlayer1();
+                TblAccount player2 = match.getPlayer2();
+                Long p1point = player1.getPoint();
+                Long p2point = player2.getPoint();
+                if (match.isPlayer1Win()) {
+                    long pointEarn = Math.max(10l, ((p2point - p1point) / 8) + 50);
+                    player1.setPoint(p1point + pointEarn);
+                    player1.setWin(player1.getWin() + 1);
+                    player2.setPoint(p2point - pointEarn);
+                    player2.setLose(player2.getLose() + 1);
+                    System.out.println("End " + pointEarn + " " + player1 + " + " + player2 + " -");
+                } else {
+                    long pointEarn = Math.max(10l, ((p1point - p2point) / 8) + 50);
+                    player1.setPoint(p1point - pointEarn);
+                    player1.setLose(player1.getLose() + 1);
+                    player2.setPoint(p2point + pointEarn);
+                    player2.setWin(player2.getWin() + 1);
+                    System.out.println("End " + pointEarn + " " + player1 + " - " + player2 + " +");
+                }
+                accountRepository.save(player1);
+                accountRepository.save(player2);
+
                 long maxWait = methods.getTimeNow() + 30 * 1000;
                 while ((!match.isPlayer1Confirm() || !match.isPlayer2Confirm()) && methods.getTimeNow() < maxWait) {
                     try {

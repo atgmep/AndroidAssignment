@@ -60,17 +60,20 @@ public class LeadActivity extends AppCompatActivity {
                             TextView txtRank = new TextView(LeadActivity.this);
                             txtRank.setLayoutParams(paramsRank);
                             txtRank.setGravity(Gravity.CENTER);
-                            String rank;
-//                            if (i == 0) {
-//                                rank = "\uD83E\uDD47";
-//                            } else if (i == 1) {
-//                                rank = "\uD83E\uDD48";
-//                            } else if (i == 2) {
-//                                rank = "\uD83E\uDD49";
-//                            } else {
-                            rank = (i + 1) + "";
-//                            }
-                            txtRank.setText(rank);
+
+                            if (i == 0) {
+                                txtRank.setText("★");
+                                txtRank.setTextColor(0xFFFFD700);
+                            } else if (i == 1) {
+                                txtRank.setText("★");
+                                txtRank.setTextColor(0xFFC0C0C0);
+                            } else if (i == 2) {
+                                txtRank.setText("★");
+                                txtRank.setTextColor(0xFFCD7F32);
+                            } else {
+                                txtRank.setText((i + 1) + "");
+                            }
+
 
                             TextView txtUser = new TextView(LeadActivity.this);
                             txtUser.setLayoutParams(paramsUser);

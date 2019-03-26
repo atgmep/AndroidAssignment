@@ -60,7 +60,7 @@ public class AccountService {
 
     public Response getLeaderBoard(Gson gson) {
         Response response = new Response(Response.STATUS_FAIL, Response.MESSAGE_FAIL);
-        List<TblAccount> accountList = accountRepository.findTop5ByOrderByPointDesc();
+        List<TblAccount> accountList = accountRepository.findTop10ByOrderByPointDesc();
         String[] stringList = new String[accountList.size()];
         for (int i = 0; i < accountList.size(); i++) {
             stringList[i] = gson.toJson(accountList.get(i));
