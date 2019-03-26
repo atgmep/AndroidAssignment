@@ -1,8 +1,10 @@
 package day12.mobilestudy.make5;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -66,7 +68,7 @@ public class LeadActivity extends AppCompatActivity {
 //                            } else if (i == 2) {
 //                                rank = "\uD83E\uDD49";
 //                            } else {
-                                rank = (i + 1) + "";
+                            rank = (i + 1) + "";
 //                            }
                             txtRank.setText(rank);
 
@@ -79,11 +81,19 @@ public class LeadActivity extends AppCompatActivity {
                             txtPoint.setLayoutParams(paramsPoint);
                             txtPoint.setGravity(Gravity.CENTER);
                             txtPoint.setText(account.getPoint() + "");
-                            
+
+
+                            TableRow tableRowBlank = new TableRow(LeadActivity.this);
+                            tableRowBlank.setLayoutParams(paramsRow);
+                            TextView txtBlank = new TextView(LeadActivity.this);
+                            txtBlank.setLayoutParams(paramsRank);
+
                             tableRow.addView(txtRank);
                             tableRow.addView(txtUser);
                             tableRow.addView(txtPoint);
                             tblLead.addView(tableRow);
+                            tableRowBlank.addView(txtBlank);
+                            tblLead.addView(tableRowBlank);
                         }
                     }
                 });
@@ -98,4 +108,9 @@ public class LeadActivity extends AppCompatActivity {
         t.start();
     }
 
+    public void clickToBack(View view) {
+        Intent intent = this.getIntent();
+        this.setResult(RESULT_OK, intent);
+        finish();
+    }
 }

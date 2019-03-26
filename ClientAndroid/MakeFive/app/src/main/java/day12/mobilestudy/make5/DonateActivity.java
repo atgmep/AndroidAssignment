@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 public class DonateActivity extends AppCompatActivity {
 
 
-
     private static PayPalConfiguration configuration = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX).clientId(Fix.PAYPAL_CLIENT_ID);
 
@@ -56,12 +55,9 @@ public class DonateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == TitleActivity.DONATE_REQ) {
             if (resultCode == RESULT_OK) {
-
-
                 Intent intent = this.getIntent();
                 this.setResult(RESULT_OK, intent);
                 finish();
-//                Toast.makeText(this, "Thank you for your donation", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "cancel", Toast.LENGTH_LONG).show();
             }
@@ -70,4 +66,9 @@ public class DonateActivity extends AppCompatActivity {
         }
     }
 
+    public void clickToBack(View view) {
+        Intent intent = this.getIntent();
+        this.setResult(RESULT_CANCELED, intent);
+        finish();
+    }
 }

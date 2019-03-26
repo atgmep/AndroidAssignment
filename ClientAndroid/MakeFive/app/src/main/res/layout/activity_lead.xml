@@ -5,21 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context=".LeadActivity">
 
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:text=" "
-      android:textStyle="bold" />
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:text=" "-->
+        <!--android:textStyle="bold" />-->
 
-  <TableLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:id="@+id/tblLead">
+    <TableLayout
+        android:id="@+id/tblLead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-  </TableLayout>
+    </TableLayout>
 
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:onClick="clickToBack"
+        android:text="Back" />
 
 </LinearLayout>
